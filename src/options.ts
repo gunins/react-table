@@ -1,51 +1,50 @@
 import {_idLens, isActiveLens, companyLens, emailLens, firstNameLens, lastNameLens} from './lenses';
 
-export default {
-    fields: [
+
+export default  [
         {
-            title: 'ID',
-            visible: false,
             id: '_id',
+            visible: false,
             index: 0,
+            title: 'ID',
             accessor: _idLens
         },
         {
-            title: 'Active',
-            visible: false,
             id: 'isActive',
+            visible: false,
             index: 1,
+            title: 'Active',
             accessor: isActiveLens
         },
         {
-            title: 'Company',
-            visible: true,
             id: 'company',
+            visible: true,
             index: 2,
+            title: 'Company',
             accessor: companyLens
 
         },
         {
-            title: 'Email',
-            visible: true,
             id: 'email',
+            visible: true,
             index: 3,
+            title: 'Email',
             accessor: emailLens
 
         },
         {
-            title: 'First Name',
-            visible: true,
             id: 'firstName',
+            visible: true,
             index: 4,
+            title: 'First Name',
             accessor: firstNameLens
 
         },
         {
-            title: 'Last Name',
-            visible: true,
             id: 'lastName',
+            visible: true,
             index: 5,
+            title: 'Last Name',
             accessor: lastNameLens
         }
     ]
-}

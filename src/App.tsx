@@ -1,7 +1,7 @@
 import React from 'react';
 import './App.css';
 import AppTable from './AppTable';
-import {model} from './network';
+import appModel from './network';
 import {ITable} from "./interfaces";
 
 interface Iprops {
@@ -17,9 +17,11 @@ class App extends React.Component {
 
     constructor(props: Iprops) {
         super(props);
+        const table = appModel.get();
         this.state = {table};
-
+        // appModel.update((table: ITable) => this.setState({table}));
     }
+
 
     render() {
         const {table} = this.state;

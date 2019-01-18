@@ -12,7 +12,7 @@ const ifTailHasSize = <A>({length}: A[]) => length === 0;
 const prop = curry2((key: string | number, obj) => (obj || {})[key]);
 const assoc = curry3((key: string | number, val, obj) => assign(isArray(obj) ? [] : {}, obj || {}, {[key]: val}));
 // @ts-ignore
-const lens = <A, B>(get, set): Ilens<A, B> => ({get, set});
+const lens = <A extends Object, B>(get, set): Ilens<A, B> => ({get, set});
 
 
 interface Iview {
@@ -80,21 +80,39 @@ interface IsetOverAsync {
 
 const setOverAsync: IsetOverAsync = curry4(async (setterLens, getterLens, fn, obj) => set(setterLens, await fn(view(getterLens, obj)), obj));
 
+interface lensProp<A, B> {
+    get(obj: A): B;
+
+    set(val: B, obj: A): A;
+}
+
+const nullLens = (): Ilens<void, void> => ({get(){}, set(){}});
+
 // @ts-ignore
-const lensProp = <A, B>(key) => lens<A, B>(prop(key), assoc(key));
-const lensPath = <A, B>(head: string | number, ...tail: (string | number)[]) => {
+const lensProp = <A, B>(key:keyof A) => lens<A, B>(prop(key), assoc(key));
+
+interface lensPath<A, B> {
+    get(obj: A): B;
+
+    set(val: B, obj: A): A;
+}
+
+
+
+const lensPath = <A extends Object, B>(head: keyof A, ...tail: (string | number)[]) => {
     const [tailHead, ...tailTail] = tail;
     return {
-        get(obj = {}): B {
+        get(obj:A): B {
             // @ts-ignore
-            return ifTailHasSize<string | number>(tail) ? view(lensProp<A, B>(head), obj) : view<A, B>(lensPath<A,B>(tailHead, ...tailTail), obj[head]);
+            return ifTailHasSize<string | number>(tail) ? view(lensProp<A, B>(head), obj) : view<A, B>(lensPath<A, B>(tailHead, ...tailTail), obj[head]);
         },
         // @ts-ignore
-        set(val, obj = {}): A {
+
+        set(val:B, obj:A): A {
             // @ts-ignore
-            return ifTailHasSize<string | number>(tail) ? set<A, B>(lensProp<A, B>(head), val, obj) : assoc(head, set(lensPath<A,B>(tailHead, ...tailTail), val, obj[head]), obj);
+            return ifTailHasSize<string | number>(tail) ? set<A, B>(lensProp<A, B>(head), val, obj) : assoc(head, set(lensPath<A, B>(tailHead, ...tailTail), val, obj[head]), obj);
         }
     }
 };
 
-export {prop, assoc, lens, view, set, over, setOver, overAsync, setOverAsync, lensProp, lensPath}
+export {prop, assoc, lens, view, set, over, setOver, overAsync, setOverAsync, lensProp, lensPath, nullLens}

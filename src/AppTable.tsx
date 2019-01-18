@@ -3,30 +3,32 @@ import Table from './table/Table'
 import TableRow from './table/TableRow'
 import TableCell from './table/TableCell'
 import TableHeader from './table/TableHeder'
-import {ITable} from "./interfaces";
+import {ITable, IHeader, IRow, ICell} from "./interfaces";
 
 interface Iprops {
-    table:ITable
+    table: ITable
 }
 
-export default ({table}:Iprops)=>{
-    console.log(table);
+
+const headerTemplate = (header: IHeader[]) => header
+    .filter(({visible}) => visible)
+    .map(({title, id}) => <TableHeader key={id} >{title}</TableHeader>);
+
+const cellTemplate = (cells: ICell[]) => cells
+    .filter(({visible}) => visible)
+    .map(({title, id}) => <TableCell key={id} >{title}</TableCell>);
+
+
+export default ({table}: Iprops) => {
+    const {header, rows} = table;
+
     return (<Table>
         <TableRow>
-            <TableHeader>Header One</TableHeader>
-            <TableHeader>Header Two</TableHeader>
+            {headerTemplate(header)}
         </TableRow>
-        <TableRow>
-            <TableCell>Cell One</TableCell>
-            <TableCell>Cell Two</TableCell>
-        </TableRow>
-        <TableRow>
-            <TableCell>Cell One</TableCell>
-            <TableCell>Cell Two</TableCell>
-        </TableRow>
-        <TableRow>
-            <TableCell>Cell One</TableCell>
-            <TableCell>Cell Two</TableCell>
-        </TableRow>
+        {rows.map(({cells, index}) => (
+            <TableRow key={index} >{cellTemplate(cells)}</TableRow>
+        ))}
+
     </Table>)
 }
