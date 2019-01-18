@@ -4,7 +4,7 @@ import AppTable from './AppTable';
 import appModel from './network';
 import {ITable} from "./interfaces";
 
-interface Iprops {
+interface IProps {
 }
 
 const table: ITable = {
@@ -15,7 +15,7 @@ const table: ITable = {
 class App extends React.Component {
     state: { table: ITable };
 
-    constructor(props: Iprops) {
+    constructor(props: IProps) {
         super(props);
         const table = appModel.get();
         this.state = {table};
