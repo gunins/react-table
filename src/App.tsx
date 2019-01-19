@@ -48,7 +48,7 @@ export class App extends React.Component<IProps> {
         // model.update((table: ITable) => this.setState({table}));
     }
 
-    private handleValue<A>(cb: Ifn<number>, lens: lensPath<IState, number>) {
+    private handleValue<A,B>(cb: Ifn<B>, lens: lensPath<IState, B>) {
         return (_?: A) => this.setState((state: IState) => set(lens, cb(state, _))(state));
     }
 
