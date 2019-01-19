@@ -1,74 +1,69 @@
 import React from 'react';
 import './App.css';
 import AppTable from './AppTable';
-import appModel from './network';
-import {ITable} from "./interfaces";
+import {InputHandler} from "./inputHandler";
+import appModel from './model';
+import {ITable} from './table/TableIntercaces';
+import {tableModel} from './table/TableModel';
+import options from './options';
+import data from './data';
+
+import {lensPath, set, view} from "./lib/lenses";
+
+
+import {Ifn} from "./lib/interfaces";
 
 interface IProps {
     table: ITable
 }
 
-/*const table: ITable = {
-    header: [],
-    rows: []
-};*/
+
+type valueType = { value: string }
+
+interface IState {
+    tableData: ITable,
+    updatedValue: number,
+    inputValue: number
+}
+
+const updatedValueLens = lensPath<IState, number>('updatedValue');
+const inputValueLens = lensPath<IState, number>('inputValue');
+
+const add = (state: IState) => view(updatedValueLens)(state) + view(inputValueLens)(state);
+const remove = (state: IState) => view(updatedValueLens)(state) - view(inputValueLens)(state);
+const change = (_: any, {value}: valueType) => +value;
 
 export class App extends React.Component<IProps> {
-    state: {
-        table: ITable,
-        updatedValue: number,
-        inputValue: number
-    };
+    state: IState;
 
     constructor(props: IProps) {
         super(props);
-        const table = appModel.get();
-        const updatedValue: number = 0;
-        const inputValue: number = 5;
-
-        this.handleAddValue = this.handleAddValue.bind(this);
-        this.handleRemoveValue = this.handleRemoveValue.bind(this);
-
+        const model = appModel(tableModel(options), data);
+        const tableData = model.get();
         this.state = {
-            table,
-            updatedValue,
-            inputValue
+            tableData,
+            updatedValue:0,
+            inputValue:5
         };
-        // appModel.update((table: ITable) => this.setState({table}));
+        // model.update((table: ITable) => this.setState({table}));
     }
 
-    private handleAddValue() {
-        const addedValue = this.state.updatedValue + this.state.inputValue;
-        this.setState({
-            updatedValue: addedValue
-        })
-    }
-
-    private handleRemoveValue() {
-        const addedValue = this.state.updatedValue - this.state.inputValue;
-        this.setState({
-            updatedValue: addedValue
-        })
-    }
-
-    private handleChangeEvent(event: React.FormEvent<HTMLInputElement>) {
-        this.setState({
-            inputValue: parseInt(event.currentTarget.value)
-        })
+    private handleValue<A>(cb: Ifn<number>, lens: lensPath<IState, number>) {
+        return (_?: A) => this.setState((state: IState) => set(lens, cb(state, _))(state));
     }
 
     public render() {
-        const {table} = this.state;
-
+        const {tableData, inputValue, updatedValue} = this.state;
         return (
             <div className="App">
-                <AppTable table={table}/>
-                <input type="number" value={this.state.inputValue} onChange={(e) => this.handleChangeEvent(e)}/>
-                <div>
-                    <button onClick={this.handleAddValue}>Add value</button>
-                    <button onClick={this.handleRemoveValue}>Remove value</button>
-                </div>
-                <p>Total Value: {this.state.updatedValue}</p>
+                <AppTable table={tableData}/>
+                <InputHandler
+                    inputValue={inputValue}
+                    add={this.handleValue(add, updatedValueLens)}
+                    remove={this.handleValue(remove, updatedValueLens)}
+                    change={this.handleValue(change, inputValueLens)}
+                />
+                <p>Total Value: {updatedValue}</p>
             </div>
         );
     }

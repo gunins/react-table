@@ -3,7 +3,7 @@ import Table from './table/Table'
 import TableRow from './table/TableRow'
 import TableCell from './table/TableCell'
 import TableHeader from './table/TableHeder'
-import {ITable, IHeader, IRow, ICell} from "./interfaces";
+import {ITable, IHeader, IRow, ICell} from "./table/TableIntercaces";
 
 interface Iprops {
     table: ITable
