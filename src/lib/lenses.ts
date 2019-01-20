@@ -1,5 +1,5 @@
 import {curry2, curry3, curry4} from './curry';
-import {Ilens, Ifn} from './interfaces';
+import {Ilens, IFunction} from './interfaces';
 import {CurriedInterface1, CurriedInterface2, CurriedInterface3} from './curryInterface';
 
 const {isArray} = Array;
@@ -37,45 +37,45 @@ const set: Iset = curry3((lens, val, obj) => lens.set(val, obj));
 
 
 interface Iover {
-    <A, B>(lens: Ilens<A, B>, fn: Ifn<B>, obj: A): A;
+    <A, B>(lens: Ilens<A, B>, fn: IFunction<B>, obj: A): A;
 
-    <A, B>(lens: Ilens<A, B>, fn: Ifn<B>): CurriedInterface1<A, A>;
+    <A, B>(lens: Ilens<A, B>, fn: IFunction<B>): CurriedInterface1<A, A>;
 
-    <A, B>(lens: Ilens<A, B>): CurriedInterface2<Ifn<B>, A, A>;
+    <A, B>(lens: Ilens<A, B>): CurriedInterface2<IFunction<B>, A, A>;
 }
 
 const over: Iover = curry3((lens, fn, obj) => set(lens, fn(view(lens, obj)), obj));
 
 interface IoverAsync {
-    <A, B>(lens: Ilens<A, B>, fn: Ifn<Promise<B>>, obj: A): Promise<A>;
+    <A, B>(lens: Ilens<A, B>, fn: IFunction<Promise<B>>, obj: A): Promise<A>;
 
-    <A, B>(lens: Ilens<A, B>, fn: Ifn<Promise<B>>): CurriedInterface1<A, Promise<A>>;
+    <A, B>(lens: Ilens<A, B>, fn: IFunction<Promise<B>>): CurriedInterface1<A, Promise<A>>;
 
-    <A, B>(lens: Ilens<A, B>): CurriedInterface2<Ifn<Promise<B>>, A, Promise<A>>;
+    <A, B>(lens: Ilens<A, B>): CurriedInterface2<IFunction<Promise<B>>, A, Promise<A>>;
 }
 
 const overAsync: IoverAsync = curry3(async (lens, fn, obj) => set(lens, await fn(view(lens, obj)), obj));
 
 interface IsetOver {
-    <A, B, C>(setterLens: Ilens<A, B>, getterLens: Ilens<A, C>, fn: Ifn<C>, obj: A): A;
+    <A, B, C>(setterLens: Ilens<A, B>, getterLens: Ilens<A, C>, fn: IFunction<C>, obj: A): A;
 
-    <A, B, C>(setterLens: Ilens<A, B>, getterLens: Ilens<A, C>, fn: Ifn<C>): CurriedInterface1<A, A>;
+    <A, B, C>(setterLens: Ilens<A, B>, getterLens: Ilens<A, C>, fn: IFunction<C>): CurriedInterface1<A, A>;
 
-    <A, B, C>(setterLens: Ilens<A, B>, getterLens: Ilens<A, C>): CurriedInterface2<Ifn<C>, A, A>;
+    <A, B, C>(setterLens: Ilens<A, B>, getterLens: Ilens<A, C>): CurriedInterface2<IFunction<C>, A, A>;
 
-    <A, B, C>(setterLens: Ilens<A, B>): CurriedInterface3<Ilens<A, C>, Ifn<C>, A, A>;
+    <A, B, C>(setterLens: Ilens<A, B>): CurriedInterface3<Ilens<A, C>, IFunction<C>, A, A>;
 }
 
 const setOver: IsetOver = curry4((setterLens, getterLens, fn, obj) => set(setterLens, fn(view(getterLens, obj)), obj));
 
 interface IsetOverAsync {
-    <A, B, C>(setterLens: Ilens<A, B>, getterLens: Ilens<A, C>, fn: Ifn<Promise<C>>, obj: A): Promise<A>;
+    <A, B, C>(setterLens: Ilens<A, B>, getterLens: Ilens<A, C>, fn: IFunction<Promise<C>>, obj: A): Promise<A>;
 
-    <A, B, C>(setterLens: Ilens<A, B>, getterLens: Ilens<A, C>, fn: Ifn<Promise<C>>): CurriedInterface1<A, Promise<A>>;
+    <A, B, C>(setterLens: Ilens<A, B>, getterLens: Ilens<A, C>, fn: IFunction<Promise<C>>): CurriedInterface1<A, Promise<A>>;
 
-    <A, B, C>(setterLens: Ilens<A, B>, getterLens: Ilens<A, C>): CurriedInterface2<Ifn<Promise<C>>, A, Promise<A>>;
+    <A, B, C>(setterLens: Ilens<A, B>, getterLens: Ilens<A, C>): CurriedInterface2<IFunction<Promise<C>>, A, Promise<A>>;
 
-    <A, B, C>(setterLens: Ilens<A, B>): CurriedInterface3<Ilens<A, C>, Ifn<Promise<C>>, A, Promise<A>>;
+    <A, B, C>(setterLens: Ilens<A, B>): CurriedInterface3<Ilens<A, C>, IFunction<Promise<C>>, A, Promise<A>>;
 }
 
 const setOverAsync: IsetOverAsync = curry4(async (setterLens, getterLens, fn, obj) => set(setterLens, await fn(view(getterLens, obj)), obj));

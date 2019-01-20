@@ -1,9 +1,9 @@
-import {Ifn} from "./interfaces";
+import {IFunction} from "./interfaces";
 
 // @ts-ignore
-const pipe = <A>(fn: Ifn<A>, ...fns: Ifn<A>[]) => (param, ...staticArgs): A => fns.reduce((acc, f) => f(acc), fn(param, ...staticArgs));
+const pipe = <A>(fn: IFunction<A>, ...fns: IFunction<A>[]) => (param, ...staticArgs): A => fns.reduce((acc, f) => f(acc), fn(param, ...staticArgs));
 
-const compose = <A>(...fns: Ifn<A>[]) => {
+const compose = <A>(...fns: IFunction<A>[]) => {
     const [head, ...tail] = fns.reverse();
     return pipe<A>(head, ...tail);
 };
@@ -14,7 +14,7 @@ const pipeAsync = <A>(fn, ...fns) => (param, ...staticArgs) => fns
     // @ts-ignore
         .then((_): Promise<A> => f(_, ...staticArgs)), fn(param, ...staticArgs));
 
-const composeAsync = <A>(...fns: Ifn<Promise<A>>[]) => {
+const composeAsync = <A>(...fns: IFunction<Promise<A>>[]) => {
     const [head, ...tail] = fns.reverse();
     return pipeAsync<A>(head, ...tail);
 };

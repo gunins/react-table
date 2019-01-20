@@ -1,15 +1,15 @@
-interface Ifn<A> {
+interface IFunction<A> {
     (...args: any[]): A;
 }
 
 interface IMethods<A> {
     bool: boolean,
-    left?: Ifn<A>
+    left?: IFunction<A>
 }
 
 interface IMethodsPromise<A> {
     bool?: () => Promise<boolean>,
-    left?: Ifn<A>
+    left?: IFunction<A>
 }
 
 interface Ilens<A, B> {
@@ -18,4 +18,4 @@ interface Ilens<A, B> {
     set(value: B, obj: A): A
 }
 // @ts-ignore
-export {Ifn, IMethods, IMethodsPromise, Ilens}
+export {IFunction, IMethods, IMethodsPromise, Ilens}

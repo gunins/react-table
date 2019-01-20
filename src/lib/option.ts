@@ -1,12 +1,12 @@
-import {Ifn, IMethods, IMethodsPromise} from './interfaces';
+import {IFunction, IMethods, IMethodsPromise} from './interfaces';
 
 const getMethod = <A>(methods: IMethods<A>[]) => methods.find(({bool}) => bool) || {bool: false};
 //Option will find true statement and returning result (Call by Value)
 const option = <A>(...methods: IMethods<A>[]) => ({
-    or(bool: boolean, left: Ifn<A>) {
+    or(bool: boolean, left: IFunction<A>) {
         return option<A>(...methods, {bool, left})
     },
-    finally(right: Ifn<A>): A {
+    finally(right: IFunction<A>): A {
         const {left} = getMethod(methods);
         return left ? left() : right();
     }
@@ -14,11 +14,11 @@ const option = <A>(...methods: IMethods<A>[]) => ({
 
 // lazyOption will find true statement, and return function (Call by Name)
 const lazyOption = <A>(...methods: IMethods<A>[]) => ({
-    or(bool: boolean, left: Ifn<A>) {
+    or(bool: boolean, left: IFunction<A>) {
         return lazyOption(...methods, {bool, left})
     },
     // @ts-ignore
-    finally(right): Ifn<A> {
+    finally(right): IFunction<A> {
         const {left} = getMethod(methods);
         return left ? left : right;
     }
@@ -38,10 +38,10 @@ const findAsync = <A>([head, ...tail]: IMethodsPromise<A>[]) => {
 
 const optionAsync = <A>(...methods: IMethodsPromise<A>[]) => ({
     // @ts-ignore
-    or(bool, left: Ifn<A>) {
+    or(bool, left: IFunction<A>) {
         return optionAsync<A>(...methods, {bool, left})
     },
-    finally(right: Ifn<A>) {
+    finally(right: IFunction<A>) {
         return findAsync<A>(methods)
         // @ts-ignore
             .then(left => left())

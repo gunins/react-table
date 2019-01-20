@@ -1,4 +1,4 @@
-import {Ifn} from "./lib/interfaces";
+import {IFunction} from "./lib/interfaces";
 
 type GetSet = {
     get: any
@@ -7,7 +7,7 @@ type GetSet = {
 
 
 const model = <A extends GetSet, B, C>(model: A, data?: B) => {
-    let handlers: Ifn<void>[] = [];
+    let handlers: IFunction<void>[] = [];
     const updateHandlers = (data: C) => handlers.forEach(_ => _(data));
     return {
         get() {
@@ -17,7 +17,7 @@ const model = <A extends GetSet, B, C>(model: A, data?: B) => {
         },
         set() {
         },
-        update(handler: Ifn<C>) {
+        update(handler: IFunction<C>) {
             handlers = [...handlers, handler];
             return {
                 remove() {

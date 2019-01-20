@@ -1,10 +1,10 @@
 import React from "react";
-import {Ifn} from "./lib/interfaces";
+import {IFunction} from "./lib/interfaces";
 
 interface Iprops {
-    add: Ifn<void>
-    remove: Ifn<void>
-    change: Ifn<void>
+    add: IFunction<void>
+    remove: IFunction<void>
+    change: IFunction<void>
     inputValue: number
 
 }

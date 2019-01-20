@@ -9,7 +9,7 @@ import options from './options';
 import data from './data';
 
 
-import {Ifn} from "./lib/interfaces";
+import {IFunction} from "./lib/interfaces";
 
 interface IProps {
     table: ITable
@@ -30,7 +30,7 @@ const remove = ({updatedValue, inputValue}: IState) => updatedValue - inputValue
 const change = (_: any, value: string) => +value;
 
 
-const handleValue = <A, B>(key: keyof IState, accessor: Ifn<A>, _?: B) => (state: IState) => ({[key]: accessor(state, _)});
+const handleValue = <A, B>(key: keyof IState, accessor: IFunction<A>, _?: B) => (state: IState) => ({[key]: accessor(state, _)});
 
 export class App extends React.Component<IProps> {
     state: IState;
