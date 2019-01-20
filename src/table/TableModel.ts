@@ -2,7 +2,11 @@ import {ITable, IRow, ICell, IHeader, ITableOptions, Tcombined} from './TableInt
 import {set, view} from '../lib/lenses';
 
 
-const getHeader =<A> (options: ITableOptions<A>[]): IHeader[] => options.map(({id, visible, title}) => ({id, visible, title}));
+const getHeader = <A>(options: ITableOptions<A>[]): IHeader[] => options.map(({id, visible, title}) => ({
+    id,
+    visible,
+    title
+}));
 const getCell = <A>(data: A, options: ITableOptions<A>[],): ICell[] => options.map(({id, visible, accessor}) => {
     const title: Tcombined = view(accessor)(data) as string;
     return ({id, visible, title})
@@ -22,11 +26,11 @@ const getTable = <A>(options: ITableOptions<A>[], data: A[]) => {
         rows
     });
 };
-const getOption =<A> (fieldId: string, options: ITableOptions<A>[]): ITableOptions<A> | undefined => options.find(({id}) => fieldId === id);
+const getOption = <A>(fieldId: string, options: ITableOptions<A>[]): ITableOptions<A> | undefined => options.find(({id}) => fieldId === id);
 
 type ObjectLiteral = { [key: string]: any };
 
-const getField = <A  extends ObjectLiteral>({cells}: IRow, options: ITableOptions<A>[]) => cells.reduce((acc, {title, id}) => {
+const getField = <A extends ObjectLiteral>({cells}: IRow, options: ITableOptions<A>[]) => cells.reduce((acc, {title, id}) => {
     const option = getOption<A>(id, options);
     return option ? set(option.accessor, title)(acc) : acc;
 }, {} as A);
@@ -34,10 +38,8 @@ const getField = <A  extends ObjectLiteral>({cells}: IRow, options: ITableOption
 const getData = <A>(options: ITableOptions<A>[], {rows}: ITable) => rows.map((row) => getField<A>(row, options));
 
 export class TableModel<A> {
-    options: ITableOptions<A>[];
 
-    constructor(options: ITableOptions<A>[]) {
-        this.options = options;
+    constructor(readonly options: ITableOptions<A>[]) {
     }
 
     get(data: A[]) {

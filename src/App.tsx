@@ -8,8 +8,6 @@ import {tableModel} from './table/TableModel';
 import options from './options';
 import data from './data';
 
-import {lensPath, set, view} from "./lib/lenses";
-
 
 import {Ifn} from "./lib/interfaces";
 
@@ -26,12 +24,13 @@ interface IState {
     inputValue: number
 }
 
-const updatedValueLens = lensPath<IState, number>('updatedValue');
-const inputValueLens = lensPath<IState, number>('inputValue');
 
-const add = (state: IState) => view(updatedValueLens)(state) + view(inputValueLens)(state);
-const remove = (state: IState) => view(updatedValueLens)(state) - view(inputValueLens)(state);
-const change = (_: any, {value}: valueType) => +value;
+const add = ({updatedValue, inputValue}: IState) => updatedValue + inputValue;
+const remove = ({updatedValue, inputValue}: IState) => updatedValue - inputValue;
+const change = (_: any, value: string) => +value;
+
+
+const handleValue = <A, B>(key: keyof IState, accessor: Ifn<A>, _?: B) => (state: IState) => ({[key]: accessor(state, _)});
 
 export class App extends React.Component<IProps> {
     state: IState;
@@ -42,14 +41,23 @@ export class App extends React.Component<IProps> {
         const tableData = model.get();
         this.state = {
             tableData,
-            updatedValue:0,
-            inputValue:5
+            updatedValue: 0,
+            inputValue: 5
         };
         // model.update((table: ITable) => this.setState({table}));
     }
 
-    private handleValue<A,B>(cb: Ifn<B>, lens: lensPath<IState, B>) {
-        return (_?: A) => this.setState((state: IState) => set(lens, cb(state, _))(state));
+    addHandler() {
+        this.setState(handleValue('updatedValue', add))
+    }
+
+    removeHandler() {
+        this.setState(handleValue('updatedValue', remove))
+
+    }
+
+    changeHandler(value: string) {
+        this.setState(handleValue('inputValue', change, value))
     }
 
     public render() {
@@ -59,9 +67,9 @@ export class App extends React.Component<IProps> {
                 <AppTable table={tableData}/>
                 <InputHandler
                     inputValue={inputValue}
-                    add={this.handleValue(add, updatedValueLens)}
-                    remove={this.handleValue(remove, updatedValueLens)}
-                    change={this.handleValue(change, inputValueLens)}
+                    add={() => this.addHandler()}
+                    remove={() => this.removeHandler()}
+                    change={({value}: valueType) => this.changeHandler(value)}
                 />
                 <p>Total Value: {updatedValue}</p>
             </div>
