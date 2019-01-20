@@ -12,7 +12,6 @@ import data from './data';
 import {IFunction} from "./lib/interfaces";
 
 interface IProps {
-    table: ITable
 }
 
 
