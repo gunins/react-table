@@ -1,17 +1,17 @@
 import React from "react";
-import {IFunction} from "./lib/interfaces";
+import {DispatchProp, connect} from "react-redux";
+import {addHandler, removeHandler, changeHandler} from "./table/counter";
 
-interface Iprops {
-    add: IFunction<void>
-    remove: IFunction<void>
-    change: IFunction<void>
+
+interface IProps extends DispatchProp {
     inputValue: number
-
 }
 
-export const InputHandler = ({add, remove, change, inputValue}: Iprops) => (<div>
+const InputHandler = ({dispatch, inputValue}: IProps) => (<div>
     <input type="number" value={inputValue}
-           onChange={({currentTarget}: React.FormEvent<HTMLInputElement>) => change(currentTarget)}/>
-    <button onClick={() => add()}>Add value</button>
-    <button onClick={() => remove()}>Remove value</button>
+           onChange={({currentTarget}: React.FormEvent<HTMLInputElement>) => dispatch(changeHandler(currentTarget.value))}/>
+    <button onClick={() => dispatch(addHandler())}>Add value</button>
+    <button onClick={() => dispatch(removeHandler())}>Remove value</button>
 </div>);
+
+export default connect()(InputHandler)

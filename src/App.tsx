@@ -1,77 +1,53 @@
 import React from 'react';
 import './App.css';
 import AppTable from './AppTable';
-import {InputHandler} from "./inputHandler";
+import InputHandler from './inputHandler';
 import appModel from './model';
-import {ITable} from './table/TableIntercaces';
 import {tableModel} from './table/TableModel';
 import options from './options';
 import data from './data';
+import {Provider} from 'react-redux';
+import {createStore} from "redux";
+import {IState} from './interfaces'
+import {counter} from "./table/counter";
 
-
-import {IFunction} from "./lib/interfaces";
 
 interface IProps {
 }
 
 
-type valueType = { value: string }
+const model = appModel(tableModel(options), data);
 
-interface IState {
-    tableData: ITable,
-    updatedValue: number,
-    inputValue: number
-}
-
-
-const add = ({updatedValue, inputValue}: IState) => updatedValue + inputValue;
-const remove = ({updatedValue, inputValue}: IState) => updatedValue - inputValue;
-const change = (_: any, value: string) => +value;
+const emptyState: IState = {
+    tableData: model.get(),
+    updatedValue: 0,
+    inputValue: 5
+};
 
 
-const handleValue = <A, B>(key: keyof IState, accessor: IFunction<A>, _?: B) => (state: IState) => ({[key]: accessor(state, _)});
+const store = createStore(counter(emptyState));
 
 export class App extends React.Component<IProps> {
     state: IState;
 
     constructor(props: IProps) {
         super(props);
-        const model = appModel(tableModel(options), data);
-        const tableData = model.get();
-        this.state = {
-            tableData,
-            updatedValue: 0,
-            inputValue: 5
-        };
-        // model.update((table: ITable) => this.setState({table}));
-    }
-
-    addHandler() {
-        this.setState(handleValue('updatedValue', add))
-    }
-
-    removeHandler() {
-        this.setState(handleValue('updatedValue', remove))
-
-    }
-
-    changeHandler(value: string) {
-        this.setState(handleValue('inputValue', change, value))
+        this.state = store.getState();
+        store.subscribe(() => {
+            this.setState(store.getState())
+        });
     }
 
     public render() {
         const {tableData, inputValue, updatedValue} = this.state;
         return (
-            <div className="App">
-                <AppTable table={tableData}/>
-                <InputHandler
-                    inputValue={inputValue}
-                    add={() => this.addHandler()}
-                    remove={() => this.removeHandler()}
-                    change={({value}: valueType) => this.changeHandler(value)}
-                />
-                <p>Total Value: {updatedValue}</p>
-            </div>
+            <Provider store={store}>
+                <div className="App">
+                    <AppTable table={tableData}/>
+                    <InputHandler inputValue={inputValue}/>
+                    <p>Total Value: {updatedValue}</p>
+                </div>
+            </Provider>
         );
     }
 }
