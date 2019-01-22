@@ -25,29 +25,30 @@ const emptyState: IState = {
 };
 
 
-const store = createStore(counter(emptyState));
+const counterStore = createStore(counter(emptyState));
 
 export class App extends React.Component<IProps> {
     state: IState;
 
     constructor(props: IProps) {
         super(props);
-        this.state = store.getState();
-        store.subscribe(() => {
-            this.setState(store.getState())
+        this.state = counterStore.getState();
+        counterStore.subscribe(() => {
+            this.setState(counterStore.getState())
         });
     }
 
     public render() {
         const {tableData, inputValue, updatedValue} = this.state;
         return (
-            <Provider store={store}>
-                <div className="App">
-                    <AppTable table={tableData}/>
+            <div className="App">
+                <AppTable table={tableData}/>
+                {/*In app can be many Providers, apply provider in any scope where you need. Usually is in App context*/}
+                <Provider store={counterStore}>
                     <InputHandler inputValue={inputValue}/>
-                    <p>Total Value: {updatedValue}</p>
-                </div>
-            </Provider>
+                </Provider>
+                <p>Total Value: {updatedValue}</p>
+            </div>
         );
     }
 }
