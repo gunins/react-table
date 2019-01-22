@@ -1,4 +1,5 @@
 import {ITable} from "./table/TableIntercaces";
+import {IFunction} from "./lib/interfaces";
 
 export interface IData {
     _id?: string
@@ -21,6 +22,7 @@ export interface IState {
 export type valueType = { value: string }
 
 export type actionType = {
-    type: string
+    key?: keyof IState
+    type: IFunction<number>
     value?: string
 }

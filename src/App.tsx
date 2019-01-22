@@ -9,7 +9,7 @@ import data from './data';
 import {Provider} from 'react-redux';
 import {createStore} from "redux";
 import {IState} from './interfaces'
-import {counter} from "./table/counter";
+import {counter} from "./counter";
 
 
 interface IProps {
