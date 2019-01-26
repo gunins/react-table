@@ -1,17 +1,18 @@
 import React from "react";
-import {DispatchProp, connect} from "react-redux";
-import {addHandler, removeHandler, changeHandler} from "./counter";
+import {addHandler, removeHandler, changeHandler} from "./store";
 
 
-interface IProps extends DispatchProp {
+interface IProps{
     inputValue: number
 }
 
-const InputHandler = ({dispatch, inputValue}: IProps) => (<div>
-    <input type="number" value={inputValue}
-           onChange={({currentTarget}) => dispatch(changeHandler(currentTarget.value))}/>
-    <button onClick={() => dispatch(addHandler())}>Add value</button>
-    <button onClick={() => dispatch(removeHandler())}>Remove value</button>
-</div>);
+const InputHandler = ({inputValue}: IProps) => {
+    return (<div>
+        <input type="number" value={inputValue}
+               onChange={({currentTarget}) => changeHandler(currentTarget.value)}/>
+        <button onClick={() => addHandler()}>Add value</button>
+        <button onClick={() => removeHandler()}>Remove value</button>
+    </div>);
+}
 
-export default connect()(InputHandler)
+export default InputHandler

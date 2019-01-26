@@ -1,32 +1,19 @@
 import {IState, actionType} from "./interfaces";
-import {IFunction} from "./lib/interfaces";
-import {Reducer} from "redux";
+import {Reducer} from "./stateControler";
 import {compose} from "./lib/compose";
+import {option} from "./lib/option";
 
 const {assign} = Object;
+const wait = (timeout = 1000) => new Promise(resolve => setTimeout(() => resolve(), timeout));
 
 //Helper taking transform function and key to be applied to state;
-const handleValue = <A, B>({type, value, key}: actionType) => (state: IState) => key ? assign({}, state, {[key]: type(state, value)}) : state;
+const assignValue = <A, B>({type, value, key}: actionType<A, B>, state: IState) => assign({}, state, {[key]: type(state, value)});
+
+const handleValue = <A, B>(_?: actionType<A, B>) => (state: IState) => _ !== undefined ? assignValue(_, state) : state;
+
 // add initial state for first time
 const setState = <A>(left: A, right: A): A => right || left;
 // counter store returning Redux.Reducer
-export const counter = (initialState: IState): Reducer => (currentState: IState, _: actionType) =>
-    compose(handleValue(_), setState)(initialState, currentState);
+export const counter = <A, B>(initialState: IState): Reducer<IState, actionType<A, B>> =>
+    (currentState: IState, _?: actionType<A, B>) => compose(handleValue(_), setState)(initialState, currentState);
 
-// Takes key and transform function, for dispatch method;
-// With lenses key is not necessary.
-export const handler = <A, B>(type: IFunction<A>, key: keyof IState) => (value?: B) => ({
-    type,
-    key,
-    value
-});
-// Just simple transform methods, takind state and returning value.
-// with lenses should return state.
-const add = ({updatedValue, inputValue}: IState) => updatedValue + inputValue;
-const remove = ({updatedValue, inputValue}: IState) => updatedValue - inputValue;
-const change = (_: any, value: string) => +value;
-
-// export handlers for dispatch method.
-export const addHandler = handler(add, 'updatedValue');
-export const removeHandler = handler(remove, 'updatedValue');
-export const changeHandler = handler(change, 'inputValue');

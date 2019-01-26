@@ -21,8 +21,8 @@ export interface IState {
 
 export type valueType = { value: string }
 
-export type actionType = {
-    key?: keyof IState
-    type: IFunction<number>
-    value?: string
+export type actionType<A,B> = {
+    key: keyof IState
+    type: IFunction<A>
+    value?: B
 }
