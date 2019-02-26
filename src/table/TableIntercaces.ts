@@ -14,8 +14,9 @@ export interface ICell {
 }
 
 export interface IRow {
-    cells: ICell[],
-    index: number
+    cells: ICell[];
+    index: number;
+    visible?:boolean;
 }
 
 export interface ITable {

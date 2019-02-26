@@ -1,7 +1,7 @@
 import React, {ReactNode} from 'react';
 
 interface Iprops {
-    children: ReactNode
+    children: ReactNode,
 }
 
 const TableCell = ({children}: Iprops) => (<td>{children}</td>);

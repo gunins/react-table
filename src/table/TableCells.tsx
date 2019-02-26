@@ -1,18 +1,18 @@
-import React, {Fragment, ReactNode, FunctionComponent} from 'react';
-import {IHeader, ICell, IRow} from "./TableIntercaces";
+import React from "react";
+import TableMap, {TableMapType} from "./TableMap";
+import TableCell from './TableCell';
+import {ICell} from "./TableIntercaces";
 
-interface Iprops<A> {
-    cells: A[];
-    children: (cell: A) => ReactNode
+const TableBodyMap = TableMap as TableMapType<ICell>;
+
+interface Iprops {
+    cells: ICell[];
 }
 
-export type TableCellsType<A = IHeader | ICell> = FunctionComponent<Iprops<A>>
-
-
-const TableCells: TableCellsType = ({children, cells}) => (<Fragment>{
-    cells
-        .filter(({visible}) => visible)
-        .map((cell) => children(cell))
-}</Fragment>);
+const TableCells = ({cells}: Iprops) => (
+    <TableBodyMap data={cells}>{
+        ({title, id}) =>
+            <TableCell key={id}>{title}</TableCell>
+    }</TableBodyMap>);
 
 export default TableCells;

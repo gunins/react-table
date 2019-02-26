@@ -3,32 +3,21 @@ import Table from './table/Table'
 import TableRow from './table/TableRow'
 import TableRows from './table/TableRows'
 import TableCells from './table/TableCells'
-import TableCell from './table/TableCell'
-import TableHeader from './table/TableHeader'
+
+import TableHeaders from './table/TableHeaders'
 import {ITable} from "./table/TableIntercaces";
 
 interface Iprops {
     table: ITable
 }
 
-
-export default ({table}: Iprops) => {
-    const {header, rows} = table;
-
-    return (<Table>
+export default ({table: {header, rows}}: Iprops) => (
+    <Table>
         <TableRow>
-            <TableCells cells={header}>{
-                ({title}) =>
-                    <TableHeader>{title}</TableHeader>
-            }</TableCells>
+            <TableHeaders headers={header}/>
         </TableRow>
         <TableRows rows={rows}>{
-            (cells) => (
-                <TableCells cells={cells}>
-                    {({title}) => <TableCell>{title}</TableCell>}
-                </TableCells>
-            )
+            (cells) =>
+                <TableCells cells={cells}/>
         }</TableRows>
-
-    </Table>)
-}
+    </Table>);
