@@ -1,22 +1,15 @@
 import React from 'react';
 import Table from './table/Table'
 import TableRow from './table/TableRow'
+import TableRows from './table/TableRows'
+import TableCells from './table/TableCells'
 import TableCell from './table/TableCell'
-import TableHeader from './table/TableHeder'
-import {ITable, IHeader, IRow, ICell} from "./table/TableIntercaces";
+import TableHeader from './table/TableHeader'
+import {ITable} from "./table/TableIntercaces";
 
 interface Iprops {
     table: ITable
 }
-
-
-const headerTemplate = (header: IHeader[]) => header
-    .filter(({visible}) => visible)
-    .map(({title, id}) => <TableHeader key={id} >{title}</TableHeader>);
-
-const cellTemplate = (cells: ICell[]) => cells
-    .filter(({visible}) => visible)
-    .map(({title, id}) => <TableCell key={id} >{title}</TableCell>);
 
 
 export default ({table}: Iprops) => {
@@ -24,11 +17,18 @@ export default ({table}: Iprops) => {
 
     return (<Table>
         <TableRow>
-            {headerTemplate(header)}
+            <TableCells cells={header}>{
+                ({title}) =>
+                    <TableHeader>{title}</TableHeader>
+            }</TableCells>
         </TableRow>
-        {rows.map(({cells, index}) => (
-            <TableRow key={index} >{cellTemplate(cells)}</TableRow>
-        ))}
+        <TableRows rows={rows}>{
+            (cells) => (
+                <TableCells cells={cells}>
+                    {({title}) => <TableCell>{title}</TableCell>}
+                </TableCells>
+            )
+        }</TableRows>
 
     </Table>)
 }

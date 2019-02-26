@@ -4,6 +4,6 @@ interface Iprops {
     children: ReactNode
 }
 
-const cell = ({children}: Iprops) => (<td>{children}</td>);
+const TableCell = ({children}: Iprops) => (<td>{children}</td>);
 
-export default cell;
+export default TableCell;

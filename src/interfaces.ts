@@ -14,14 +14,12 @@ export interface IData {
 }
 
 export interface IState {
-    tableData: ITable,
-    updatedValue: number,
-    inputValue: number
+    tableData: ITable;
 }
 
 export type valueType = { value: string }
 
-export type actionType<A,B> = {
+export type actionType<A, B> = {
     key: keyof IState
     type: IFunction<A>
     value?: B

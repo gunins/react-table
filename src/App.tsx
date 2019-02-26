@@ -1,7 +1,6 @@
 import React from 'react';
-import './App.css';
+import styles from './App.module.scss';
 import AppTable from './AppTable';
-import InputHandler from './inputHandler';
 import {IState} from './interfaces'
 import {subscribe, getState} from "./store";
 
@@ -22,13 +21,11 @@ export class App extends React.Component<IProps> {
     }
 
     public render() {
-        const {tableData, inputValue, updatedValue} = this.state;
+        const {tableData} = this.state;
         return (
-            <div className="App">
+            <div className={styles.App}>
                 <AppTable table={tableData}/>
                 {/*In app can be many Providers, apply provider in any scope where you need. Usually is in App context*/}
-                <InputHandler inputValue={inputValue}/>
-                <p>Total Value: {updatedValue}</p>
             </div>
         );
     }

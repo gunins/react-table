@@ -1,8 +1,9 @@
 import React, {ReactNode} from 'react';
 
 interface Iprops {
-    children: ReactNode
+    children: ReactNode,
 }
+
 
 const header = ({children}: Iprops) => (<th>{children}</th>);
 
