@@ -61,7 +61,7 @@
     "style-loader": "0.23.0",
     "terser-webpack-plugin": "1.1.0",
     "ts-functional": "github:gunins/ts-functional#master",
-    "typescript": "^3.2.2",
+    "typescript": "3.3.3333",
     "typings-for-css-modules-loader": "^1.7.0",
     "url-loader": "1.1.1",
     "webpack": "4.19.1",

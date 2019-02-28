@@ -1,9 +1,10 @@
 import React, {ReactNode} from 'react';
 
 interface Iprops {
-    children: ReactNode
+    children: ReactNode,
+    attributes?: { [key: string]: string }
 }
 
-const row = ({children}: Iprops) => (<tr>{children}</tr>);
+const row = ({children, attributes}: Iprops) => (<tr {...attributes}>{children}</tr>);
 
 export default row;

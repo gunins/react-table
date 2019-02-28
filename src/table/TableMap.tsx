@@ -11,9 +11,7 @@ export type TableMapType<A = tableType> = FunctionComponent<Iprops<A>>
 
 
 const TableMap: TableMapType = ({children, data}) => (<Fragment>{
-    data
-        .filter(({visible}) => visible === undefined || visible)
-        .map((cell) => children(cell))
+    data.map((cell) => children(cell))
 }</Fragment>);
 
 export default TableMap;

@@ -12,10 +12,13 @@ interface Iprops {
 
 const TableRows = ({rows, children}: Iprops) => (
     <TableRowMap data={rows}>{
-        ({cells, index}) => (
-            <TableRow key={index}>
-                {children(cells)}
-            </TableRow>)
+        (_) => {
+            const {cells, index, attributes} =_;
+            return (
+                <TableRow attributes={attributes}  key={index}>
+                    {children(cells)}
+                </TableRow>)
+        }
     }</TableRowMap>);
 
 export default TableRows;

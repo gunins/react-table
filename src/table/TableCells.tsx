@@ -11,8 +11,8 @@ interface Iprops {
 
 const TableCells = ({cells}: Iprops) => (
     <TableBodyMap data={cells}>{
-        ({title, id}) =>
-            <TableCell key={id}>{title}</TableCell>
+        ({title,  ..._}) =>
+            <TableCell key={_.id} {..._}>{title}</TableCell>
     }</TableBodyMap>);
 
 export default TableCells;
